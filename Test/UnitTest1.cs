@@ -38,13 +38,11 @@ namespace Test
 		public override void OnEnter()
 		{
             Console.WriteLine("Enter WalkState");
-            base.OnEnter();
 		}
 
 		public override void OnExit()
 		{
             Console.WriteLine("Exit WalkState");
-            base.OnExit();
 		}
 	}
 
@@ -65,13 +63,11 @@ namespace Test
         public override void OnEnter()
         {
             Console.WriteLine("Enter IdleState");
-            base.OnEnter();
         }
 
         public override void OnExit()
         {
             Console.WriteLine("Exit IdleState");
-            base.OnExit();
         }
 
 		public override void OnPause()
@@ -83,7 +79,6 @@ namespace Test
         public override void OnResume()
         {
             Console.WriteLine("Resume IdleState");
-            base.OnResume();
         }
 	}
 
