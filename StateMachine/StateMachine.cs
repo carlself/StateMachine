@@ -17,12 +17,12 @@ namespace FSM
         /// Initializes a new instance of the <see cref="T:FSM.StateMachine"/> class.
         /// </summary>
         /// <param name="initState">Init state.</param>
-        public StateMachine(State<TState,TEvent> initState)
+        public StateMachine(State<TState, TEvent> initState, IEqualityComparer<TState> stateComparer = null)
         {
             m_running = false;
             m_states = new Stack<State<TState, TEvent>>();
             m_states.Push(initState);
-            m_statesDict = new Dictionary<TState, State<TState, TEvent>>();
+            m_statesDict = new Dictionary<TState, State<TState, TEvent>>(stateComparer);
         }
 
         public void AddState(State<TState, TEvent> state)
@@ -33,7 +33,7 @@ namespace FSM
         public State<TState, TEvent> GetState(TState stateId)
         {
             State<TState, TEvent> state;
-            if(m_statesDict.TryGetValue(stateId, out state))
+            if (m_statesDict.TryGetValue(stateId, out state))
             {
                 return state;
             }
@@ -58,9 +58,9 @@ namespace FSM
         {
             if (!m_running || m_states.Count == 0)
                 return;
-                            
+
             var currentState = m_states.Peek();
-            var transition =  currentState.Update();
+            var transition = currentState.Update();
             DoTransition(transition);
         }
 
@@ -86,8 +86,8 @@ namespace FSM
         {
             if (!m_running)
                 return;
-            
-            switch(transition.Op)
+
+            switch (transition.Op)
             {
                 case TransitionOperation.None:
                     break;
@@ -114,12 +114,12 @@ namespace FSM
 
         void Pop()
         {
-            if(m_states.Count != 0)
+            if (m_states.Count != 0)
             {
                 var currentState = m_states.Pop();
                 currentState.OnExit();
 
-                if(m_states.Count != 0)
+                if (m_states.Count != 0)
                 {
                     currentState = m_states.Peek();
                     currentState.OnResume();
@@ -129,7 +129,7 @@ namespace FSM
 
         void Push(TState stateId)
         {
-            if(m_states.Count != 0)
+            if (m_states.Count != 0)
             {
                 m_states.Peek().OnPause();
             }
@@ -141,7 +141,7 @@ namespace FSM
 
         void Switch(TState stateId)
         {
-            if(m_states.Count != 0)
+            if (m_states.Count != 0)
             {
                 var currentState = m_states.Pop();
                 currentState.OnExit();
@@ -154,7 +154,7 @@ namespace FSM
 
         void Stop()
         {
-            while(m_states.Count !=0)
+            while (m_states.Count != 0)
             {
                 var state = m_states.Pop();
                 state.OnExit();

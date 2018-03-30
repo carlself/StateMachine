@@ -1,6 +1,7 @@
 using System;
 using Xunit;
 using FSM;
+using System.Collections.Generic;
 
 namespace Test
 {
@@ -8,6 +9,19 @@ namespace Test
     {
         Idle,
         Walk
+    }
+
+    class StateComparer : IEqualityComparer<PlayerState>
+    {
+        public bool Equals(PlayerState x, PlayerState y)
+        {
+            return x == y;
+        }
+
+        public int GetHashCode(PlayerState obj)
+        {
+            return (int)obj;
+        }
     }
 
     enum InputEvent
@@ -89,7 +103,7 @@ namespace Test
         {
             var walkState = new WalkState(3);
             var idleState = new IdleState();
-            var sm = new StateMachine<PlayerState, InputEvent>(idleState);
+            var sm = new StateMachine<PlayerState, InputEvent>(idleState, new StateComparer());
             sm.AddState(walkState);
             sm.AddState(idleState);
             sm.Start();
@@ -100,6 +114,16 @@ namespace Test
             {
                 sm.Update();
             }
+
+            // Output:
+            // Enter IdleState
+            // Pause IdleState
+            // Enter WalkState
+            // Tick WalkState
+            // Tick WalkState
+            // Tick WalkState
+            // Exit WalkState
+            // Resume IdleState
         }
     }
 }
