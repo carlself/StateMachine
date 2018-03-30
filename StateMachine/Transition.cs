@@ -30,6 +30,7 @@ namespace FSM
 
     public class Transition
     {
+        // some static Transition instances
         public static Transition None = new Transition { Op = TransitionOperation.None };
         public static Transition Pop = new Transition { Op = TransitionOperation.Pop };
         public static Transition Quit = new Transition { Op = TransitionOperation.Quit };
